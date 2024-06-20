@@ -44,25 +44,29 @@ def random_N_digits(n):
 def depositMoney():
     acn=input("Please Enter Your Account Number: ")
     amount=int(input("Please Enter The amount you want to deposit: "))
+    pin=int(input("Please enter your pin: "))
     with open(f"./{acn}.json",'r') as jsonfile:
         data=json.load(jsonfile)
         jsonfile.close()
-
+    if pin==data["pin"]:
         temp=data["balance"]
         data["balance"]+=amount
         # x=datetime.now()
         data["records"].append(f"amount {amount} deposited at {str(datetime.now())}")
 
-    with open(f'./{acn}.json','w') as jsonfile:
-        json.dump(data,jsonfile)  
+        with open(f'./{acn}.json','w') as jsonfile:
+            json.dump(data,jsonfile)  
+    else:
+        print("you have entered the wrong pin number")
 
 def withdrawMoney():
     acn=input("Please Enter Your Account Number: ")
     amount=int(input("Please Enter The amount you want to withdraw: "))
+    pin=int(input("Please enter your pin: "))
     with open(f"./{acn}.json",'r') as jsonfile:
         data=json.load(jsonfile)
         jsonfile.close()
-
+    if pin==data["pin"]:    
         temp=data["balance"]
         if temp<amount:
             print("You dont have sufficient balance")
@@ -71,26 +75,37 @@ def withdrawMoney():
             data["balance"]-=amount
             # x=datetime.now()
             data["records"].append(f"amount {amount} withdrawn at {str(datetime.now())}")
+    
+        with open(f'./{acn}.json','w') as jsonfile:
+            json.dump(data,jsonfile) 
 
-    with open(f'./{acn}.json','w') as jsonfile:
-        json.dump(data,jsonfile) 
+    else:
+        print("You have entered the wrong pin")
 
 def checkBalance():
     acn=input("Please Enter your account number: ")
+    pin=int(input("Please enter your pin: "))
     with open(f"./{acn}.json",'r') as jsonfile:
         data=json.load(jsonfile)
         jsonfile.close()
-    temp=data["balance"]
-    print(f"your current balance is: {temp}")
+    if pin==data["pin"]:
+        temp=data["balance"]
+        print(f"your current balance is: {temp}")
+    else:
+        print("You have entered wrong pin")
 
 def checkTransactionHistory():
     acn=input("Please Enter your account number: ")
+    pin=int(input("Please enter your pin: "))
     with open(f"./{acn}.json",'r') as jsonfile:
         data=json.load(jsonfile)
         jsonfile.close()
 
-    for i in data["records"]:
-        print(f"{i}\n")
+    if pin==data["pin"]:
+        for i in data["records"]:
+            print(f"{i}\n")
+    else:
+        print("You have entered wrong pin")
 
 
 def changeInformation():
@@ -122,9 +137,13 @@ def changeInformation():
     else:
         inp=int(input("Enter new pin: "))
         data["pin"]=inp
-    with open(f"./{acn}.json",'w') as jsonfile:
-        json.dump(data,jsonfile)
-        jsonfile.close()
+    pin=int(input("Please enter your pin: "))
+    if pin==data["pin"]:
+        with open(f"./{acn}.json",'w') as jsonfile:
+            json.dump(data,jsonfile)
+            jsonfile.close()
+    else:
+        print("you have entered wrong pin")
 
 if __name__=="__main__":
     session=True
